@@ -1,0 +1,8 @@
+indexes:
+
+- kind: Student
+  ancestor: no
+  properties:
+  - name: username
+    direction: desc
+
