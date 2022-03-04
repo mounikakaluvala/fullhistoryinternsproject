@@ -55,7 +55,7 @@ public class SampleServlet extends HttpServlet {
 		   datastore.put(entity);
 		  System.out.println(datastore);
 		 
-		
+	
 		Query<Entity> query = Query.newEntityQueryBuilder()
 			    .setKind("Person")
 			    .setFilter(PropertyFilter.eq("favorite_food", "pizza"))
@@ -68,8 +68,8 @@ public class SampleServlet extends HttpServlet {
 			  response.getWriter().append(currentEntity.getString("name") + " you are  invited to a pizza party");
 			  response.getWriter().append("<br>");
 			}
-			
-			
+		
+			// here is the
 //			Query<Entity> query =
 //				    Query.newEntityQueryBuilder()
 //				        .setKind("Person")
