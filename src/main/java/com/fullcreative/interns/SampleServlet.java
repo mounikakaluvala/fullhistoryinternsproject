@@ -45,6 +45,7 @@ public class SampleServlet extends HttpServlet {
 		
 		//Custom Key entity save
 		
+		
 		   KeyFactory keyFactory = datastore.newKeyFactory().setKind("Person"); 
 		   Key key = keyFactory.newKey("mounika@gmail.com");
 		   Entity entity =Entity.newBuilder(key)
