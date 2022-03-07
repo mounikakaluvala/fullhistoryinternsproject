@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.cloud.datastore.Datastore;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.cloud.datastore.DatastoreOptions;
-import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
@@ -28,6 +30,7 @@ public class SampleServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
+	
     public SampleServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -41,33 +44,33 @@ public class SampleServlet extends HttpServlet {
 		
 		
 
-		Datastore datastore = DatastoreOptions.newBuilder().setProjectId("fullhistoryinternsproject").build().getService();
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		//Custom Key entity save
 		
 		
-		   KeyFactory keyFactory = datastore.newKeyFactory().setKind("Person"); 
-		   Key key = keyFactory.newKey("mounika@gmail.com");
-		   Entity entity =Entity.newBuilder(key)
-		   .set("name", "mounika")
-		   .set("age", 51) 
-		  .set("favorite_food", "pizza").build(); 
-		   datastore.put(entity);
-		  System.out.println(datastore);
+//		   KeyFactory keyFactory = datastore.newKeyFactory().setKind("Person"); 
+//		   Key key = keyFactory.newKey("mounika@gmail.com");
+//		   Entity entity =Entity.newBuilder(key)
+//		   .set("name", "mounika")
+//		   .set("age", 51) 
+//		  .set("favorite_food", "pizza").build(); 
+//		   datastore.put(entity);
+//		  System.out.println(datastore);
 		 
 	
-		Query<Entity> query = Query.newEntityQueryBuilder()
-			    .setKind("Person")
-			    .setFilter(PropertyFilter.eq("favorite_food", "pizza"))
-			    .build();
-		
-			QueryResults<Entity> results = datastore.run(query);
-			while (results.hasNext()) {
-			  Entity currentEntity = results.next();
-			  response.getWriter().append("<br>");
-			  response.getWriter().append(currentEntity.getString("name") + " you are  invited to a pizza party");
-			  response.getWriter().append("<br>");
-			}
+//		Query<Entity> query = Query.newEntityQueryBuilder()
+//			    .setKind("Person")
+//			    .setFilter(PropertyFilter.eq("favorite_food", "pizza"))
+//			    .build();
+//		
+//			QueryResults<Entity> results = datastore.run(query);
+//			while (results.hasNext()) {
+//			  Entity currentEntity = results.next();
+//			  response.getWriter().append("<br>");
+//			  response.getWriter().append(currentEntity.getString("name") + " you are  invited to a pizza party");
+//			  response.getWriter().append("<br>");
+//			}
 		
 			// here is the
 //			Query<Entity> query =
@@ -85,9 +88,9 @@ public class SampleServlet extends HttpServlet {
 //				  response.getWriter().append(currentEntity.getString("name") + " you are  invited to a pizza party");
 //				  response.getWriter().append("</br>");
 //				}
+//			
 			
-			
-		
+//		
 //		  KeyFactory keyFactory = datastore.newKeyFactory().setKind("Person");
 //		  Key key= keyFactory.newKey("mounika@gmail.com");
 //		Entity entity = datastore.get(key); if
@@ -97,8 +100,36 @@ public class SampleServlet extends HttpServlet {
 //		  Entity entity2 = datastore.get(key);
 //		  
 //		  response.getWriter().append(entity2.getString("favorite_food") +" is favorite food of mounika now");
-//		 
+//		
+		Entity employee = new Entity("Employee");
+		employee.setProperty("firstname", "mounika");
+	    employee.setProperty("lastname", "kaluvala"); 
+	    employee.setProperty("age",  "21");
+
+		datastore.put(employee);
+
+		Entity address = new Entity("Address", employee.getKey());
+		address.setProperty("city", "Hyderabad");
+		datastore.put(address);
+		 
+
+	
+		try {
+			Entity addressEntity = datastore.get(address.getKey());
+			
+			Entity employee2 =	datastore.get(addressEntity.getParent());
+			
+			System.out.println(employee2.getProperty("name"));			
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+       
+	
 	}
+	 
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
